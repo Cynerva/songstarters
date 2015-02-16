@@ -1,10 +1,12 @@
 (ns client.main 
-    (:require 
+    (:require
+        [cljs.core.async :refer [<!]]
         [reagent.core :as reagent]
         [client.audio :refer [context]]
-        [client.sampler :refer [create-sampler]]
+        [client.sampler :refer [create-random-sampler]]
         [client.reverb :refer [create-reverb]]
     )
+    (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
 (defn my-component []
@@ -15,9 +17,12 @@
 
 (reagent/render-component [my-component] (.-body js/document))
 
-(let [
+(go (let [
     dest (aget context "destination")
-    song (create-reverb (create-sampler))
+    song (<! (create-random-sampler))
 ]
-    (doall (for [i (range 1 5)] (song dest i)))
-)
+    (song dest 0)
+    (song dest 1)
+    (song dest 2)
+    (song dest 3)
+))

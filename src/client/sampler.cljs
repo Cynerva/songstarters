@@ -1,11 +1,11 @@
 (ns client.sampler
     (:require
-        [cljs.core.async :refer [<!]]
+        [cljs.reader :refer [read-string]]
+        [cljs.core.async :refer [chan >! <!]]
+        [cljs-http.client :as http]
         [client.audio :refer [context load-buffer]]
     )
-    (:require-macros
-        [cljs.core.async.macros :refer [go]]
-    )
+    (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
 (defn play-buffer [buffer dest when]
@@ -16,9 +16,25 @@
     )
 )
 
-; TODO: make this support multiple sample files
-(defn create-sampler []
-    (fn [dest when]
-        (go (play-buffer (<! (load-buffer "samples/Chip_Snr_4.wav")) dest when))
+(defn create-sampler [sample-path]
+    (let [c (chan)]
+        (go (let [buffer (<! (load-buffer sample-path))]
+            (>! c (fn [dest when] (play-buffer buffer dest when)))
+        ))
+        c
+    )
+)
+
+(defn create-random-sampler []
+    (let [c (chan)]
+        (go (let [
+            response (<! (http/get "/sampleList"))
+            sample-list (read-string (:body response))
+            sample-path (rand-nth sample-list)
+            sampler (<! (create-sampler sample-path))
+        ]
+            (>! c sampler)
+        ))
+        c
     )
 )
