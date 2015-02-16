@@ -18,10 +18,7 @@
 
 (go (let [
     dest (aget context "destination")
-    song (<! (create-random-song {:dest dest :duration 10}))
+    song (<! (create-random-song {:duration 60}))
 ]
-    (song 0)
-    (song 1)
-    (song 2)
-    (song 3)
+    (song (aget context "currentTime"))
 ))
