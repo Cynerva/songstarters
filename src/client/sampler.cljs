@@ -16,22 +16,22 @@
     )
 )
 
-(defn create-sampler [sample-path]
+(defn create-sampler [dest sample-path]
     (let [c (chan)]
         (go (let [buffer (<! (load-buffer sample-path))]
-            (>! c (fn [dest when] (play-buffer buffer dest when)))
+            (>! c (fn [when] (play-buffer buffer dest when)))
         ))
         c
     )
 )
 
-(defn create-random-sampler []
+(defn create-random-sampler [dest duration]
     (let [c (chan)]
         (go (let [
             response (<! (http/get "/sampleList"))
             sample-list (read-string (:body response))
             sample-path (rand-nth sample-list)
-            sampler (<! (create-sampler sample-path))
+            sampler (<! (create-sampler dest sample-path))
         ]
             (>! c sampler)
         ))

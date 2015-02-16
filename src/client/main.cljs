@@ -4,7 +4,7 @@
         [reagent.core :as reagent]
         [client.audio :refer [context]]
         [client.sampler :refer [create-random-sampler]]
-        [client.reverb :refer [create-reverb]]
+        [client.reverb :refer [create-random-reverb]]
     )
     (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -19,10 +19,10 @@
 
 (go (let [
     dest (aget context "destination")
-    song (<! (create-random-sampler))
+    song (<! (create-random-reverb dest 10))
 ]
-    (song dest 0)
-    (song dest 1)
-    (song dest 2)
-    (song dest 3)
+    (song 0)
+    (song 1)
+    (song 2)
+    (song 3)
 ))

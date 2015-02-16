@@ -1,7 +1,10 @@
 (ns client.reverb
     (:require
+        [cljs.core.async :refer [chan >! <!]]
         [client.audio :refer [context]]
+        [client.sampler :refer [create-random-sampler]]
     )
+    (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
 (defn create-impulse-response [duration decay]
@@ -21,13 +24,16 @@
     )
 )
 
-; TODO: figure out how to pass in children properly, duration, decay
-(defn create-reverb [child]
-    (let [convolver (.createConvolver context)]
-        (aset convolver "buffer" (create-impulse-response 1 2))
-        (fn [dest when]
+(defn create-random-reverb [dest duration]
+    (let [c (chan)]
+        (go (let [
+            convolver (.createConvolver context)
+            child (<! (create-random-sampler convolver duration))
+        ]
+            (aset convolver "buffer" (create-impulse-response 1 2))
             (.connect convolver dest)
-            (child convolver when)
-        )
+            (>! c child)
+        ))
+        c
     )
 )
