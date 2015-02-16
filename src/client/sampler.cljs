@@ -25,13 +25,13 @@
     )
 )
 
-(defn create-random-sampler [dest duration]
+(defn create-random-sampler [params]
     (let [c (chan)]
         (go (let [
             response (<! (http/get "/sampleList"))
             sample-list (read-string (:body response))
             sample-path (rand-nth sample-list)
-            sampler (<! (create-sampler dest sample-path))
+            sampler (<! (create-sampler (:dest params) sample-path))
         ]
             (>! c sampler)
         ))

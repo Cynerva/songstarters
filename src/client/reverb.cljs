@@ -24,14 +24,14 @@
     )
 )
 
-(defn create-random-reverb [dest duration]
+(defn create-random-reverb [params]
     (let [c (chan)]
         (go (let [
             convolver (.createConvolver context)
-            child (<! (create-random-sampler convolver duration))
+            child (<! (create-random-sampler (assoc params :dest convolver)))
         ]
-            (aset convolver "buffer" (create-impulse-response 1 2))
-            (.connect convolver dest)
+            (aset convolver "buffer" (create-impulse-response 0.5 2))
+            (.connect convolver (:dest params))
             (>! c child)
         ))
         c
