@@ -10,7 +10,7 @@
 
 (defn my-component []
   [:div
-    [:h1 "Songstarterj"]
+    [:h1 "Songstarters"]
   ]
 )
 

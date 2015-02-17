@@ -33,5 +33,5 @@
 
 (defn -main []
   (run-server my-routes {:port 8000})
-  (println "songstarterj started on port 8000")
+  (println "songstarters started on port 8000")
 )

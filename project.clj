@@ -1,4 +1,4 @@
-(defproject songstarterj "0.0.0"
+(defproject songstarters "0.0.0"
     :main server.main
     :dependencies [
         [org.clojure/clojure "1.6.0"]
@@ -16,7 +16,7 @@
         :builds [{
             :source-paths ["src"]
             :compiler {
-                :output-to "public/dist/songstarterj.js"
+                :output-to "public/dist/songstarters.js"
             }
         }]
     }
