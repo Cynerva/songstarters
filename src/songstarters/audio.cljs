@@ -3,11 +3,11 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-(def context (js/AudioContext.))
-
-(defn load-buffer [url]
-  (let [c (chan)]
-    (let [req (js/XMLHttpRequest.)]
+(defn load-buffer [context url]
+  (let [
+    c (chan)
+    req (js/XMLHttpRequest.)
+    _ (do
       (.open req "GET" url true)
       (aset req "responseType" "arraybuffer")
       (aset req "onload" (fn []
@@ -15,6 +15,13 @@
       ))
       (.send req)
     )
-    c
+  ] c)
+)
+
+(defn play-buffer [context buffer dest when]
+  (let [source (.createBufferSource context)]
+    (aset source "buffer" buffer)
+    (.connect source dest)
+    (.start source when)
   )
 )
