@@ -1,7 +1,7 @@
-(ns client.reverb
+(ns songstarters.reverb
   (:require
     [cljs.core.async :refer [chan >! <!]]
-    [client.audio :refer [context]]
+    [songstarters.audio :refer [context]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )

@@ -1,4 +1,4 @@
-(ns server.main
+(ns songstarters.server.core
   (:require
     [org.httpkit.server :refer :all]
     [clojure.string :refer [split]]

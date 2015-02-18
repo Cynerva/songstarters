@@ -1,4 +1,4 @@
-(ns client.looper
+(ns songstarters.looper
   (:require[cljs.core.async :refer [chan >! <!]])
   (:require-macros [cljs.core.async.macros :refer [go]])
 )

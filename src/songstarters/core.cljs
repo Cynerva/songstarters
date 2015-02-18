@@ -1,9 +1,9 @@
-(ns client.main 
+(ns songstarters.core 
   (:require
     [cljs.core.async :refer [<!]]
     [reagent.core :as reagent]
-    [client.audio :refer [context]]
-    [client.song :refer [create-random-song]]
+    [songstarters.audio :refer [context]]
+    [songstarters.song :refer [create-random-song]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -18,6 +18,6 @@
 
 (go (let [
   dest (aget context "destination")
-  song (<! (create-random-song {:duration 60}))
+  song (<! (create-random-song))
   _ (song (aget context "currentTime"))
 ]))

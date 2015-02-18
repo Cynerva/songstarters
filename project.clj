@@ -1,5 +1,5 @@
 (defproject songstarters "0.0.0"
-    :main server.main
+    :main songstarters.server.core
     :dependencies [
         [org.clojure/clojure "1.6.0"]
         [org.clojure/clojurescript "0.0-2850"]

@@ -1,4 +1,4 @@
-(ns client.splitter
+(ns songstarters.splitter
   (:require [cljs.core.async :refer [chan >! <!]])
   (:require-macros [cljs.core.async.macros :refer [go]])
 )

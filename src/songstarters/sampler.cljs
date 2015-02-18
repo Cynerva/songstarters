@@ -1,9 +1,9 @@
-(ns client.sampler
+(ns songstarters.sampler
   (:require
     [cljs.reader :refer [read-string]]
     [cljs.core.async :refer [chan >! <!]]
     [cljs-http.client :as http]
-    [client.audio :refer [context load-buffer]]
+    [songstarters.audio :refer [context load-buffer]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )

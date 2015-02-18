@@ -1,4 +1,4 @@
-(ns client.audio
+(ns songstarters.audio
   (:require [cljs.core.async :refer [chan >!]])
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
