@@ -34,6 +34,6 @@
     dest (:dest params)
     sample-path (first (rest node))
     buffer (<! (load-buffer context sample-path))
-    sampler (fn [when] (play-buffer context buffer dest when))
-  ] sampler))
+    player (fn [when] (play-buffer context buffer dest when))
+  ] player))
 )

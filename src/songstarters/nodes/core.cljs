@@ -4,6 +4,7 @@
     [songstarters.nodes.sampler]
     [songstarters.nodes.looper]
     [songstarters.nodes.splitter]
+    [songstarters.nodes.reverb]
   )
 )
 
@@ -11,6 +12,7 @@
   :sampler
   :looper
   :splitter
+  :reverb
 ])
 
 (defmethod node/random :any [_ params]
