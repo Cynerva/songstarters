@@ -1,4 +1,4 @@
-(ns songstarters.reverb
+(ns songstarters.nodes.reverb
   (:require
     [cljs.core.async :refer [chan >! <!]]
   )
