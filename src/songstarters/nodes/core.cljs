@@ -3,12 +3,14 @@
     [songstarters.nodes.node :as node]
     [songstarters.nodes.sampler]
     [songstarters.nodes.looper]
+    [songstarters.nodes.splitter]
   )
 )
 
 (def node-types [
   :sampler
   :looper
+  :splitter
 ])
 
 (defmethod node/random :any [_ params]
