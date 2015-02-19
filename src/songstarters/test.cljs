@@ -9,7 +9,7 @@
 (go (let [
   context (js/AudioContext.)
   dest (.-destination context)
-  params {:context context :dest dest :duration 10}
+  params {:context context :dest dest :duration 60}
   node (<! (node/random :any params))
   _ (.log js/console (pr-str node))
   player (<! (node/player node params))

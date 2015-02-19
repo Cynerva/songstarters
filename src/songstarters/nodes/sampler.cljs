@@ -21,7 +21,7 @@
 )
 
 (defmethod node/allow? :sampler [_ params]
-  (< (:duration params) 1.0)
+  (< (:duration params) 0.5)
 )
 
 (defmethod node/random :sampler [_ _]
