@@ -14,15 +14,13 @@
       duration (:duration params)
       interval (/ duration 2)
       child-params (assoc params :duration interval)
-      looper [:looper (<! ((:dispatch params) child-params))]
+      looper [:looper interval (<! ((:dispatch params) child-params))]
     ] looper))
   )
   :player (fn [node params]
     (go (let [
-      duration (:duration params) ; fixme
-      interval (/ duration 2)
-      child-params (assoc params :duration interval) ; fixme
-      child (<! ((:dispatch params) (first (rest node)) child-params))
+      [interval child-node] (rest node)
+      child (<! ((:dispatch params) child-node params))
       player (fn [when]
         (child when)
         (child (+ when interval))

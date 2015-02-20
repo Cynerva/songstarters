@@ -14,7 +14,7 @@
       duration (:duration params)
       interval (/ duration 2)
       child-params (assoc params :duration interval)
-      splitter [:splitter
+      splitter [:splitter interval
         (<! ((:dispatch params) child-params))
         (<! ((:dispatch params) child-params))
       ]
@@ -22,11 +22,9 @@
   )
   :player (fn [node params]
     (go (let [
-      duration (:duration params) ; fixme
-      interval (/ duration 2)
-      child-params (assoc params :duration interval)
-      first-child (<! ((:dispatch params) (get node 1) child-params))
-      second-child (<! ((:dispatch params) (get node 2) child-params))
+      interval (get node 1)
+      first-child (<! ((:dispatch params) (get node 2) params))
+      second-child (<! ((:dispatch params) (get node 3) params))
       player (fn [when]
         (first-child when)
         (second-child (+ when interval))

@@ -5,7 +5,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-(defn play-osc [context dest when duration osc-type freq]
+(defn play-osc [context dest osc-type freq duration when]
   (let [osc (.createOscillator context)]
     (aset osc "type" osc-type)
     (aset (.-frequency osc) "value" freq)
@@ -23,7 +23,7 @@
     (go (let [
       osc-type (rand-nth ["sine" "triangle" "sawtooth" "square"])
       freq (* (rand) 1000)
-      osc [:osc osc-type freq]
+      osc [:osc osc-type freq (:duration params)]
     ] osc))
   )
   :player (fn [node params]
@@ -31,10 +31,10 @@
       (play-osc
         (:context params)
         (:dest params)
-        when
-        (:duration params)
         (get node 1)
         (get node 2)
+        (get node 3)
+        when
       )
     ))
   )

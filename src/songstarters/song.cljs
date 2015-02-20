@@ -46,7 +46,6 @@
     (go (let [
       context (or (:context params) (js/AudioContext.))
       default-params {
-        :duration 60
         :context context
         :dest (.-destination context)
         :dispatch dispatch-player
