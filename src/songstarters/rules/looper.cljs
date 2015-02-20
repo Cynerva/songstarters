@@ -1,11 +1,11 @@
-(ns songstarters.nodes.splitter
+(ns songstarters.rules.looper
   (:require
     [cljs.core.async :refer [chan >! <!]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-(def rule {:splitter {
+(def rule {:looper {
   :allow? (fn [params]
     (> (:duration params) 0.1)
   )
@@ -14,22 +14,18 @@
       duration (:duration params)
       interval (/ duration 2)
       child-params (assoc params :duration interval)
-      splitter [:splitter
-        (<! ((:dispatch params) child-params))
-        (<! ((:dispatch params) child-params))
-      ]
-    ] splitter))
+      looper [:looper (<! ((:dispatch params) child-params))]
+    ] looper))
   )
   :player (fn [node params]
     (go (let [
       duration (:duration params) ; fixme
       interval (/ duration 2)
-      child-params (assoc params :duration interval)
-      first-child (<! ((:dispatch params) (get node 1) child-params))
-      second-child (<! ((:dispatch params) (get node 2) child-params))
+      child-params (assoc params :duration interval) ; fixme
+      child (<! ((:dispatch params) (first (rest node)) child-params))
       player (fn [when]
-        (first-child when)
-        (second-child (+ when interval))
+        (child when)
+        (child (+ when interval))
       )
     ] player))
   )

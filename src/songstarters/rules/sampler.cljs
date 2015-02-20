@@ -1,4 +1,4 @@
-(ns songstarters.nodes.sampler
+(ns songstarters.rules.sampler
   (:require
     [cljs.reader :refer [read-string]]
     [cljs.core.async :refer [chan >! <!]]

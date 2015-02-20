@@ -1,11 +1,11 @@
 (ns songstarters.song
   (:require
     [cljs.core.async :refer [<!]]
-    [songstarters.nodes.sampler :as sampler]
-    [songstarters.nodes.looper :as looper]
-    [songstarters.nodes.splitter :as splitter]
-    [songstarters.nodes.reverb :as reverb]
-    [songstarters.nodes.osc :as osc]
+    [songstarters.rules.sampler :as sampler]
+    [songstarters.rules.looper :as looper]
+    [songstarters.rules.splitter :as splitter]
+    [songstarters.rules.reverb :as reverb]
+    [songstarters.rules.osc :as osc]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )

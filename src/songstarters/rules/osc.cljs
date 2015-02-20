@@ -1,4 +1,4 @@
-(ns songstarters.nodes.osc
+(ns songstarters.rules.osc
   (:require
     [cljs.core.async :refer [chan >! <!]]
   )
