@@ -4,7 +4,6 @@
     [cljs.core.async :refer [chan >! <!]]
     [cljs-http.client :as http]
     [songstarters.audio :refer [load-buffer play-buffer]]
-    [songstarters.nodes.node :as node]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -20,20 +19,20 @@
   ))
 )
 
-(defmethod node/allow? :sampler [_ params]
-  (< (:duration params) 0.5)
-)
-
-(defmethod node/random :sampler [_ _]
-  (go [:sampler (<! (random-sample-path))])
-)
-
-(defmethod node/player :sampler [node params]
-  (go (let [
-    context (:context params)
-    dest (:dest params)
-    sample-path (first (rest node))
-    buffer (<! (load-buffer context sample-path))
-    player (fn [when] (play-buffer context buffer dest when))
-  ] player))
-)
+(def rule {:sampler {
+  :allow? (fn [params]
+    (< (:duration params) 0.5)
+  )
+  :apply (fn [params]
+    (go [:sampler (<! (random-sample-path))])
+  )
+  :player (fn [node params]
+    (go (let [
+      context (:context params)
+      dest (:dest params)
+      sample-path (first (rest node))
+      buffer (<! (load-buffer context sample-path))
+      player (fn [when] (play-buffer context buffer dest when))
+    ] player))
+  )
+}})

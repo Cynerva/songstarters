@@ -16,7 +16,9 @@
         :builds [{
             :source-paths ["src"]
             :compiler {
-                :output-to "public/dist/songstarters.js"
+              :output-dir "public/dist/build"
+              :output-to "public/dist/songstarters.js"
+              :source-map "public/dist/songstarters.js.map"
             }
         }]
     }

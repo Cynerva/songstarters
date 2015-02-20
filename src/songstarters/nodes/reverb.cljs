@@ -1,7 +1,6 @@
 (ns songstarters.nodes.reverb
   (:require
     [cljs.core.async :refer [chan >! <!]]
-    [songstarters.nodes.node :as node]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -29,23 +28,23 @@
   )
 )
 
-(defmethod node/allow? :reverb [_ params]
-  (not (contains? params :reverb))
-)
-
-(defmethod node/random :reverb [_ params]
-  (go (let [
-    child-params (assoc params :reverb true)
-    reverb [:reverb (<! (node/random :any child-params))]
-  ] reverb))
-)
-
-(defmethod node/player :reverb [node params]
-  (let [
-    context (:context params)
-    dest (:dest params)
-    convolver (create-convolver context dest)
-    child-params (assoc params :dest convolver)
-    child (node/player (get node 1) child-params)
-  ] child)
-)
+(def rule {:reverb {
+  :allow? (fn [params]
+    (not (contains? params :reverb))
+  )
+  :apply (fn [params]
+    (go (let [
+      child-params (assoc params :reverb true)
+      reverb [:reverb (<! ((:dispatch params) child-params))]
+    ] reverb))
+    )
+  :player (fn [node params]
+    (let [
+      context (:context params)
+      dest (:dest params)
+      convolver (create-convolver context dest)
+      child-params (assoc params :dest convolver)
+      child ((:dispatch params) (get node 1) child-params)
+    ] child)
+  )
+}})

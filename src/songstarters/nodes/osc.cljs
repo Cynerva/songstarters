@@ -1,7 +1,6 @@
 (ns songstarters.nodes.osc
   (:require
     [cljs.core.async :refer [chan >! <!]]
-    [songstarters.nodes.node :as node]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -16,27 +15,27 @@
   )
 )
 
-(defmethod node/allow? :osc [_ params]
-  (< (:duration params) 0.5)
-)
-
-(defmethod node/random :osc [_ params]
-  (go (let [
-    osc-type (rand-nth ["sine" "triangle" "sawtooth" "square"])
-    freq (* (rand) 1000)
-    osc [:osc osc-type freq]
-  ] osc))
-)
-
-(defmethod node/player :osc [node params]
-  (go (fn [when]
-    (play-osc
-      (:context params)
-      (:dest params)
-      when
-      (:duration params)
-      (get node 1)
-      (get node 2)
-    )
-  ))
-)
+(def rule {:osc {
+  :allow? (fn [params]
+    (< (:duration params) 0.5)
+  )
+  :apply (fn [params]
+    (go (let [
+      osc-type (rand-nth ["sine" "triangle" "sawtooth" "square"])
+      freq (* (rand) 1000)
+      osc [:osc osc-type freq]
+    ] osc))
+  )
+  :player (fn [node params]
+    (go (fn [when]
+      (play-osc
+        (:context params)
+        (:dest params)
+        when
+        (:duration params)
+        (get node 1)
+        (get node 2)
+      )
+    ))
+  )
+}})
