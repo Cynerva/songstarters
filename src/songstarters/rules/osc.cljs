@@ -17,7 +17,7 @@
 
 (def rule {:osc {
   :allow? (fn [params]
-    (< (:duration params) 0.5)
+    (< (:duration params) 0.4)
   )
   :apply (fn [params]
     (go (let [
@@ -27,15 +27,18 @@
     ] osc))
   )
   :player (fn [node params]
-    (go (fn [when]
-      (play-osc
-        (:context params)
-        (:dest params)
-        (get node 1)
-        (get node 2)
-        (get node 3)
-        when
+    (go (let [
+      context (:context params)
+      dest (:dest params)
+      gain (.createGain context)
+      _ (do
+        (set! (.-value (.-gain gain)) 0.5)
+        (.connect gain dest)
       )
-    ))
+      osc-type (get node 1)
+      freq (get node 2)
+      duration (get node 3)
+      player (fn [when] (play-osc context gain osc-type freq duration when))
+    ] player))
   )
 }})

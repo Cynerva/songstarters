@@ -21,7 +21,7 @@
 
 (def rule {:sampler {
   :allow? (fn [params]
-    (< (:duration params) 0.5)
+    (< (:duration params) 0.4)
   )
   :apply (fn [params]
     (go [:sampler (<! (random-sample-path))])
