@@ -26,7 +26,6 @@
     full-scale (vec (flatten (for [i (range 9)]
       (map (partial + (* i 12)) scale)
     )))
-    _ (.log js/console "SCALE: " (pr-str full-scale))
   ] full-scale)
 )
 

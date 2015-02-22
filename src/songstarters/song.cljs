@@ -7,12 +7,14 @@
     [songstarters.rules.reverb :as reverb]
     [songstarters.rules.osc :as osc]
     [songstarters.rules.scale :as scale]
+    [songstarters.rules.mixer :as mixer]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
 (def rules (merge
   sampler/rule
+  mixer/rule
   looper/rule
   splitter/rule
   reverb/rule
