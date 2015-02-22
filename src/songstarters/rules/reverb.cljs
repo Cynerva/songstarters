@@ -10,7 +10,7 @@
     (loop [l length result []]
       (if (= l 0)
         result
-        (recur (dec l) (conj result (- (* (rand) 2) 1)))
+        (recur (dec l) (conj result (- (rand 2) 1)))
       )
     )
   )
@@ -19,7 +19,7 @@
       (if (= l 0)
         result
         (let [
-          white (- (* (rand) 2) 1)
+          white (- (rand 2) 1)
           b0 (+ (* 0.99886 b0) (* white 0.0555179)) 
           b1 (+ (* 0.99332 b1) (* white 0.0750759))
           b2 (+ (* 0.96900 b2) (* white 0.1538520))
@@ -32,15 +32,26 @@
       )
     )
   )
+  :brown (fn [length]
+    (loop [l length result [] last 0]
+      (if (= l 0)
+        result
+        (let [
+          white (- (rand 2) 1)
+          value (/ (+ last (* white 0.02)) 1.02)
+        ] (recur (dec l) (conj result value) value))
+      )
+    )
+  )
 })
 
-(defn impulse-response [context duration decay]
+(defn impulse-response [context color duration decay]
   (let [
     sample-rate (aget context "sampleRate")
     length (* sample-rate duration)
     buffer (.createBuffer context 2 length sample-rate)
     channels [(.getChannelData buffer 0) (.getChannelData buffer 1)]
-    noise ((noise-colors :pink) length)
+    noise ((noise-colors color) length)
     _ (doseq [channel channels i (range length)]
       (aset channel i (*
         (get noise i)
@@ -50,9 +61,9 @@
   ] buffer)
 )
 
-(defn create-convolver [context dest]
+(defn create-convolver [context dest color]
   (let [convolver (.createConvolver context)]
-    (aset convolver "buffer" (impulse-response context 1 2))
+    (aset convolver "buffer" (impulse-response context color 1 2))
     (.connect convolver dest)
     convolver
   )
@@ -65,16 +76,18 @@
   :apply (fn [params]
     (go (let [
       child-params (assoc params :reverb true)
-      reverb [:reverb (<! ((:dispatch params) child-params))]
+      color (rand-nth (keys noise-colors))
+      reverb [:reverb color (<! ((:dispatch params) child-params))]
     ] reverb))
     )
   :player (fn [node params]
     (let [
       context (:context params)
       dest (:dest params)
-      convolver (create-convolver context dest)
+      color (get node 1)
+      convolver (create-convolver context dest color)
       child-params (assoc params :dest convolver)
-      child ((:dispatch params) (get node 1) child-params)
+      child ((:dispatch params) (get node 2) child-params)
     ] child)
   )
 }})
