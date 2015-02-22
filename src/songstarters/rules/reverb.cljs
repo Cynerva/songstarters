@@ -71,6 +71,16 @@
   )
 )
 
+(defn create-gain [context dests value]
+  (let [gain (.createGain context)]
+    (set! (.-value (.-gain gain)) value)
+    (doseq [dest dests]
+      (.connect gain dest)
+    )
+    gain
+  )
+)
+
 (def rule {:reverb {
   :allow? (fn [params]
     (not (contains? params :reverb))
@@ -79,7 +89,8 @@
     (go (let [
       child-params (assoc params :reverb true)
       color (rand-nth (keys noise-colors))
-      reverb [:reverb color (<! ((:dispatch params) child-params))]
+      dry-gain (rand)
+      reverb [:reverb color dry-gain (<! ((:dispatch params) child-params))]
     ] reverb))
     )
   :player (fn [node params]
@@ -87,9 +98,11 @@
       context (:context params)
       dests (:dests params)
       color (get node 1)
+      dry-gain (get node 2)
       convolver (create-convolver context dests color)
-      child-params (assoc params :dests [convolver])
-      child ((:dispatch params) (get node 2) child-params)
+      gain (create-gain context dests dry-gain)
+      child-params (assoc params :dests [gain convolver])
+      child ((:dispatch params) (get node 3) child-params)
     ] child)
   )
 }})
