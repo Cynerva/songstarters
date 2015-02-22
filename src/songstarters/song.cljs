@@ -6,6 +6,7 @@
     [songstarters.rules.splitter :as splitter]
     [songstarters.rules.reverb :as reverb]
     [songstarters.rules.osc :as osc]
+    [songstarters.rules.scale :as scale]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -16,6 +17,7 @@
   splitter/rule
   reverb/rule
   osc/rule
+  scale/rule
 ))
 
 (defn dispatch-apply [params]
@@ -35,6 +37,7 @@
   ([params]
     (dispatch-apply (merge {
       :duration 60
+      :scale (range 128)
       :dispatch dispatch-apply
     } params))
   )

@@ -1,6 +1,7 @@
 (ns songstarters.rules.osc
   (:require
     [cljs.core.async :refer [chan >! <!]]
+    [songstarters.rules.scale :refer [note->freq]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -22,8 +23,8 @@
   :apply (fn [params]
     (go (let [
       osc-type (rand-nth ["sine" "triangle" "sawtooth" "square"])
-      freq (* (rand) 1000)
-      osc [:osc osc-type freq (:duration params)]
+      note (rand-nth (:scale params))
+      osc [:osc osc-type note (:duration params)]
     ] osc))
   )
   :player (fn [node params]
@@ -36,7 +37,7 @@
         (.connect gain dest)
       )
       osc-type (get node 1)
-      freq (get node 2)
+      freq (note->freq (get node 2))
       duration (get node 3)
       player (fn [when] (play-osc context gain osc-type freq duration when))
     ] player))
