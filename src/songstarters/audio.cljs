@@ -27,3 +27,15 @@
     (.start source when)
   )
 )
+
+(defn new-compressor [context dest]
+  (let [compressor (.createDynamicsCompressor context)]
+    (set! (.-value (.-threshold compressor)) -5)
+    (set! (.-value (.-knee compressor)) 5)
+    (set! (.-value (.-ratio compressor)) 128)
+    (set! (.-value (.-attack compressor)) 0)
+    (set! (.-value (.-release compressor)) 0.5)
+    (.connect compressor dest)
+    compressor
+  )
+)

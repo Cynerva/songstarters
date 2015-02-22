@@ -1,6 +1,7 @@
 (ns songstarters.song
   (:require
     [cljs.core.async :refer [<!]]
+    [songstarters.audio :refer [new-compressor]]
     [songstarters.rules.sampler :as sampler]
     [songstarters.rules.looper :as looper]
     [songstarters.rules.splitter :as splitter]
@@ -52,9 +53,10 @@
   ([song params]
     (go (let [
       context (or (:context params) (js/AudioContext.))
+      dest (new-compressor context (.-destination context))
       default-params {
         :context context
-        :dests [(.-destination context)]
+        :dests [dest]
         :dispatch dispatch-player
       }
       player (<! (dispatch-player song (merge default-params params)))
