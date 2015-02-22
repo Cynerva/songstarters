@@ -30,11 +30,13 @@
   :player (fn [node params]
     (go (let [
       context (:context params)
-      dest (:dest params)
+      dests (:dests params)
       gain (.createGain context)
       _ (do
         (set! (.-value (.-gain gain)) 0.5)
-        (.connect gain dest)
+        (doseq [dest dests]
+          (.connect gain dest)
+        )
       )
       osc-type (get node 1)
       freq (note->freq (get node 2))

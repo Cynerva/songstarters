@@ -29,10 +29,10 @@
   :player (fn [node params]
     (go (let [
       context (:context params)
-      dest (:dest params)
+      dests (:dests params)
       sample-path (first (rest node))
       buffer (<! (load-buffer context sample-path))
-      player (fn [when] (play-buffer context buffer dest when))
+      player (fn [when] (play-buffer context buffer dests when))
     ] player))
   )
 }})

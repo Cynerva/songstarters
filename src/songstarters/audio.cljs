@@ -18,10 +18,12 @@
   ] c)
 )
 
-(defn play-buffer [context buffer dest when]
+(defn play-buffer [context buffer dests when]
   (let [source (.createBufferSource context)]
     (aset source "buffer" buffer)
-    (.connect source dest)
+    (doseq [dest dests]
+      (.connect source dest)
+    )
     (.start source when)
   )
 )

@@ -61,10 +61,12 @@
   ] buffer)
 )
 
-(defn create-convolver [context dest color]
+(defn create-convolver [context dests color]
   (let [convolver (.createConvolver context)]
     (aset convolver "buffer" (impulse-response context color 1 2))
-    (.connect convolver dest)
+    (doseq [dest dests]
+      (.connect convolver dest)
+    )
     convolver
   )
 )
@@ -83,10 +85,10 @@
   :player (fn [node params]
     (let [
       context (:context params)
-      dest (:dest params)
+      dests (:dests params)
       color (get node 1)
-      convolver (create-convolver context dest color)
-      child-params (assoc params :dest convolver)
+      convolver (create-convolver context dests color)
+      child-params (assoc params :dests [convolver])
       child ((:dispatch params) (get node 2) child-params)
     ] child)
   )

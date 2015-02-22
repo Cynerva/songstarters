@@ -52,7 +52,7 @@
       context (or (:context params) (js/AudioContext.))
       default-params {
         :context context
-        :dest (.-destination context)
+        :dests [(.-destination context)]
         :dispatch dispatch-player
       }
       player (<! (dispatch-player song (merge default-params params)))
