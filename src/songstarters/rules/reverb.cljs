@@ -5,24 +5,54 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-(defn create-impulse-response [context duration decay]
+(def noise-colors {
+  :white (fn [length]
+    (loop [l length result []]
+      (if (= l 0)
+        result
+        (recur (dec l) (conj result (- (* (rand) 2) 1)))
+      )
+    )
+  )
+  :pink (fn [length]
+    (loop [l length result [] b0 0 b1 0 b2 0 b3 0 b4 0 b5 0 b6 0]
+      (if (= l 0)
+        result
+        (let [
+          white (- (* (rand) 2) 1)
+          b0 (+ (* 0.99886 b0) (* white 0.0555179)) 
+          b1 (+ (* 0.99332 b1) (* white 0.0750759))
+          b2 (+ (* 0.96900 b2) (* white 0.1538520))
+          b3 (+ (* 0.86650 b3) (* white 0.3104856))
+          b4 (+ (* 0.55000 b4) (* white 0.5329522))
+          b5 (- (* -0.7616 b5) (* white 0.0168980))
+          pink (+ b0 b1 b2 b3 b4 b5 b6 (* white 0.5362))
+          b6 (* white 0.115926)
+        ] (recur (dec l) (conj result pink) b0 b1 b2 b3 b4 b5 b6))
+      )
+    )
+  )
+})
+
+(defn impulse-response [context duration decay]
   (let [
     sample-rate (aget context "sampleRate")
     length (* sample-rate duration)
     buffer (.createBuffer context 2 length sample-rate)
     channels [(.getChannelData buffer 0) (.getChannelData buffer 1)]
-    sample-value (fn [index]
-      (* (- (* (rand) 2) 1) (Math/pow (- 1 (/ index length)) decay))
-    )
+    noise ((noise-colors :pink) length)
     _ (doseq [channel channels i (range length)]
-      (aset channel i (sample-value i))
+      (aset channel i (*
+        (get noise i)
+        (Math/pow (- 1 (/ i length)) decay)
+      ))
     )
   ] buffer)
 )
 
 (defn create-convolver [context dest]
   (let [convolver (.createConvolver context)]
-    (aset convolver "buffer" (create-impulse-response context 1 2))
+    (aset convolver "buffer" (impulse-response context 1 2))
     (.connect convolver dest)
     convolver
   )
