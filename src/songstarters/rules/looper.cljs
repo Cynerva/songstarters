@@ -7,7 +7,7 @@
 
 (def rule {:looper {
   :allow? (fn [params]
-    (> (:duration params) 0.2)
+    (>= (:duration params) (* (:min-note-duration params) 2))
   )
   :apply (fn [params]
     (go (let [

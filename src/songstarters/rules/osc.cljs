@@ -18,7 +18,7 @@
 
 (def rule {:osc {
   :allow? (fn [params]
-    (< (:duration params) 0.4)
+    (<= (:duration params) (:max-note-duration params))
   )
   :apply (fn [params]
     (go (let [

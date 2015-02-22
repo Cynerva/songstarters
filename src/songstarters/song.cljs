@@ -37,6 +37,8 @@
   ([params]
     (dispatch-apply (merge {
       :duration 60
+      :min-note-duration 0.1
+      :max-note-duration 0.2
       :scale (range 128)
       :dispatch dispatch-apply
     } params))
