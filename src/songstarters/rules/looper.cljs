@@ -12,18 +12,25 @@
   :apply (fn [params]
     (go (let [
       duration (:duration params)
-      interval (/ duration 2)
+      subdivide 2
+      interval (/ duration subdivide)
       child-params (assoc params :duration interval)
-      looper [:looper interval (<! ((:dispatch params) child-params))]
+      child (<! ((:dispatch params) child-params))
+      looper [:looper interval subdivide child]
     ] looper))
   )
   :player (fn [node params]
     (go (let [
-      [interval child-node] (rest node)
+      [interval subdivide child-node] (rest node)
       child (<! ((:dispatch params) child-node params))
       player (fn [when]
-        (child when)
-        (child (+ when interval))
+        (loop [i subdivide when when]
+          ; FIXME: should be a (when) call...
+          (if (> i 0) (do
+            (child when)
+            (recur (dec i) (+ when interval))
+          ))
+        )
       )
     ] player))
   )
