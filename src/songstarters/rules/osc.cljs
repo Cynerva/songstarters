@@ -36,7 +36,7 @@
       dests (:dests params)
       gain (.createGain context)
       _ (do
-        (set! (.-value (.-gain gain)) 0.5)
+        (set! (.-value (.-gain gain)) (/ 1.0 3.0))
         (doseq [dest dests]
           (.connect gain dest)
         )

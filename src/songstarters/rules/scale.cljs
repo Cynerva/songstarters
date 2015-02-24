@@ -10,21 +10,19 @@
 )
 
 (def scales [
-  [0]
-  [0 7]
   [0 2 4 5 7 9 11] ; c major
   [0 2 4 5 7 9 10] ; c mixolydian
   [0 2 3 5 7 9 10] ; c minor (dorian)
   [0 2 3 5 7 8 10] ; c minor (aeolian)
-  [0 1 2 3 4 5 6 7 8 9 10 11] ; yaaay
 ])
 
 (defn random-scale []
   (let [
     key (rand-int 12)
     scale (map (partial + key) (rand-nth scales))
+    subscale (into [(first scale)] (filter #(= (rand-int 2) 0) (rest scale)))
     full-scale (vec (flatten (for [i (range 9)]
-      (map (partial + (* i 12)) scale)
+      (map (partial + (* i 12)) subscale)
     )))
   ] full-scale)
 )
