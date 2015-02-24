@@ -31,7 +31,7 @@
 
 (def rule {:scale {
   :allow? (fn [params]
-    (>= (count (:scale params)) 128)
+    (not (contains? params :scale))
   )
   :apply (fn [params]
     ((:dispatch params)
