@@ -21,18 +21,20 @@
 
 (def rule {:sampler {
   :allow? (fn [params]
-    (<= (:duration params) (* (:min-note-duration params) 2))
+    (<= (:duration params) (:max-note-duration params))
   )
   :apply (fn [params]
-    (go [:sampler (<! (random-sample-path))])
+    (go [:sampler (:duration params) (<! (random-sample-path))])
   )
   :player (fn [node params]
     (go (let [
       context (:context params)
       dests (:dests params)
-      sample-path (first (rest node))
+      duration (get node 1)
+      sample-path (get node 2)
       buffer (<! (load-buffer context sample-path))
-      player (fn [when] (play-buffer context buffer dests when))
+      playback-rate (/ (.-duration buffer) duration)
+      player (fn [when] (play-buffer context buffer dests when playback-rate))
     ] player))
   )
 }})

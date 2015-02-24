@@ -18,9 +18,10 @@
   ] c)
 )
 
-(defn play-buffer [context buffer dests when]
+(defn play-buffer [context buffer dests when playback-rate]
   (let [source (.createBufferSource context)]
-    (aset source "buffer" buffer)
+    (set! (.-buffer source) buffer)
+    (set! (.-value (.-playbackRate source)) playback-rate)
     (doseq [dest dests]
       (.connect source dest)
     )
