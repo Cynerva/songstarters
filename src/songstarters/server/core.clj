@@ -13,8 +13,7 @@
     root-path (.getAbsolutePath root)
     files (filter #(.isFile %1) (file-seq root))
     file-paths (for [file files] (.getAbsolutePath file))
-    sound-paths (filter #(= (last (split %1 #"\.")) "wav") file-paths)
-    result (for [path sound-paths]
+    result (for [path file-paths]
       (str "samples/" (subs path (+ (count root-path) 1)))
     )
   ] result)

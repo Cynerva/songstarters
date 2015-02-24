@@ -1,5 +1,8 @@
 (defproject songstarters "0.0.0"
     :main songstarters.server.core
+    :aliases {
+      "import" ["run", "-m", "songstarters.server.import"]
+    }
     :dependencies [
         [org.clojure/clojure "1.6.0"]
         [org.clojure/clojurescript "0.0-2850"]
