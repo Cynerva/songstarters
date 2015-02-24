@@ -3,16 +3,21 @@
     [clojure.string :refer [replace-first split join]]
     [clojure.java.io :as io]
     [clojure.java.shell :refer [sh]]
+    [me.raynes.fs :as fs]
   )
 )
 
 ; Imports samples for the server to use.
 ; Requires ffmpeg, converts to .ogg
 
+; This file is a mess, sorry!
+
 (defn import-file [in root-path]
   (let [
     out (join "." (conj (pop (split
-      (replace-first in root-path "public/samples")
+      (replace-first in root-path
+        (join ["public/samples/" (fs/base-name root-path)])
+      )
       #"\."
     )) "ogg"))
     _ (io/make-parents out)
@@ -22,7 +27,6 @@
       (println "Skipping" in)
     )
   ])
-  ;(println (:out (sh "echo" in out)))
 )
 
 (defn -main [path]

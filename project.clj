@@ -9,6 +9,7 @@
         [org.clojure/core.async "0.1.346.0-17112a-alpha"]
         [http-kit "2.1.18"]
         [compojure "1.3.1"]
+        [me.raynes/fs "1.4.6"]
         [cljs-http "0.1.26"]
         [reagent "0.5.0-alpha3"]
     ]
