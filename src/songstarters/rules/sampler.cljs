@@ -8,14 +8,12 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-; TODO: memoize sample list
-(defn random-sample-path []
+(defn sample-paths []
   (go (->
     "sampleList"
     http/get <!
     :body
     read-string
-    rand-nth
   ))
 )
 
@@ -24,7 +22,7 @@
     (<= (:duration params) (:max-note-duration params))
   )
   :apply (fn [params]
-    (go [:sampler (:duration params) (<! (random-sample-path))])
+    (go [:sampler (:duration params) (rand-nth (:sample-paths params))])
   )
   :player (fn [node params]
     (go (let [

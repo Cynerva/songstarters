@@ -37,14 +37,15 @@
 
 (defn random-song
   ([] (random-song {}))
-  ([params]
+  ([params] (go
     (dispatch-apply (merge {
       :duration 60
       :min-note-duration 0.1
       :max-note-duration 0.2
       :dispatch dispatch-apply
+      :sample-paths (<! sampler/sample-paths)
     } params))
-  )
+  ))
 )
 
 (defn play-song
