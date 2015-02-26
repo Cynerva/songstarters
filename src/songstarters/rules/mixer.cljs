@@ -7,11 +7,13 @@
 
 (def rule {:mixer {
   :allow? (fn [params]
-    (not (contains? params :mixer))
+    (> (:max-simultaneous params) 1)
   )
   :apply (fn [params]
     (let [
-      child-params (assoc params :mixer true)
+      child-params (assoc params :max-simultaneous
+        (/ (:max-simultaneous params) 2)
+      )
       mixer [:mixer
         ((:dispatch params) child-params)
         ((:dispatch params) child-params)

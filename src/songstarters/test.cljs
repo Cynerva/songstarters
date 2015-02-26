@@ -10,6 +10,8 @@
   duration (+ (rand 30) 30)
   song (<! (random-song {
     :duration duration
+    :min-note-duration 0.125
+    :max-note-duration 2
   }))
   _ (do
     (.log js/console (pr-str song))
