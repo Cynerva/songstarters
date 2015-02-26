@@ -7,11 +7,10 @@
 )
 
 (go (let [
-  duration (+ (rand 30) 30)
   song (<! (random-song {
-    :duration duration
+    :duration (+ (rand 30) 30)
     :min-note-duration 0.125
-    :max-note-duration 2
+    :max-note-duration (Math/pow 2 (- (rand-int 4) 2))
   }))
   _ (do
     (.log js/console (pr-str song))
