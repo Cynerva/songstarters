@@ -10,14 +10,14 @@
     (>= (:duration params) (* (:min-note-duration params) 2))
   )
   :apply (fn [params]
-    (go (let [
+    (let [
       duration (:duration params)
       subdivide 2
       interval (/ duration subdivide)
       child-params (assoc params :duration interval)
-      child (<! ((:dispatch params) child-params))
+      child ((:dispatch params) child-params)
       looper [:looper interval subdivide child]
-    ] looper))
+    ] looper)
   )
   :player (fn [node params]
     (go (let [

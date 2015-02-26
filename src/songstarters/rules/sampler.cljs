@@ -22,7 +22,7 @@
     (<= (:duration params) (:max-note-duration params))
   )
   :apply (fn [params]
-    (go [:sampler (:duration params) (rand-nth (:sample-paths params))])
+    [:sampler (:duration params) (rand-nth (:sample-paths params))]
   )
   :player (fn [node params]
     (go (let [

@@ -86,13 +86,13 @@
     (not (contains? params :reverb))
   )
   :apply (fn [params]
-    (go (let [
+    (let [
       child-params (assoc params :reverb true)
       color (rand-nth (keys noise-colors))
       dry-gain (rand)
-      reverb [:reverb color dry-gain (<! ((:dispatch params) child-params))]
-    ] reverb))
-    )
+      reverb [:reverb color dry-gain ((:dispatch params) child-params)]
+    ] reverb)
+  )
   :player (fn [node params]
     (let [
       context (:context params)

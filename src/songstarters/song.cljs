@@ -43,7 +43,7 @@
       :min-note-duration 0.1
       :max-note-duration 0.2
       :dispatch dispatch-apply
-      :sample-paths (<! sampler/sample-paths)
+      :sample-paths (<! (sampler/sample-paths))
     } params))
   ))
 )

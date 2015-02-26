@@ -10,13 +10,13 @@
     (not (contains? params :mixer))
   )
   :apply (fn [params]
-    (go (let [
+    (let [
       child-params (assoc params :mixer true)
       mixer [:mixer
-        (<! ((:dispatch params) child-params))
-        (<! ((:dispatch params) child-params))
+        ((:dispatch params) child-params)
+        ((:dispatch params) child-params)
       ]
-    ] mixer))
+    ] mixer)
   )
   :player (fn [node params]
     (go (let [

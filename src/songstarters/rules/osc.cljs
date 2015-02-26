@@ -24,11 +24,11 @@
     )
   )
   :apply (fn [params]
-    (go (let [
+    (let [
       osc-type (rand-nth ["sine" "triangle" "sawtooth" "square"])
       note (rand-nth (:scale params))
       osc [:osc osc-type note (:duration params)]
-    ] osc))
+    ] osc)
   )
   :player (fn [node params]
     (go (let [

@@ -10,7 +10,7 @@
     (>= (:duration params) (* (:min-note-duration params) 2))
   )
   :apply (fn [params]
-    (go (let [
+    (let [
       duration (:duration params)
       subdivide 2
       interval (/ duration subdivide)
@@ -19,12 +19,12 @@
         (if (<= i 0)
           result
           (recur (dec i) (conj result
-            (<! ((:dispatch params) child-params))
+            ((:dispatch params) child-params)
           ))
         )
       )
       splitter (into [:splitter interval] children)
-    ] splitter))
+    ] splitter)
   )
   :player (fn [node params]
     (go (let [
