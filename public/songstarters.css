@@ -1,0 +1,37 @@
+body {
+    background-color: #080808;
+    color: #E0E0E0;
+}
+
+.panel-default {
+    background-color: #080808;
+    border-color: #000000;
+}
+
+.panel-default .panel-heading {
+    background-color: #404040;
+    border-color: #000000;
+    color: #E0E0E0;
+}
+
+.panel-default .panel-body {
+    background-color: #202020;
+}
+
+.panel-default .panel-footer {
+    background-color: #303030;
+    border-color: #000000;
+}
+
+.well {
+    background-color: #202020;
+    border-color: #000000;
+}
+
+.text-muted {
+    color: #A0A0A0;
+}
+
+a {
+    color: #80C0FF;
+}
