@@ -47,7 +47,7 @@
 
 (defn impulse-response [context color duration decay]
   (let [
-    sample-rate (aget context "sampleRate")
+    sample-rate (.-sampleRate context)
     length (* sample-rate duration)
     buffer (.createBuffer context 2 length sample-rate)
     channels [(.getChannelData buffer 0) (.getChannelData buffer 1)]
@@ -63,7 +63,7 @@
 
 (defn create-convolver [context dests color]
   (let [convolver (.createConvolver context)]
-    (aset convolver "buffer" (impulse-response context color 1 2))
+    (set! (.-buffer convolver) (impulse-response context color 1 2))
     (doseq [dest dests]
       (.connect convolver dest)
     )

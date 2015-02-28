@@ -9,9 +9,9 @@
     req (js/XMLHttpRequest.)
     _ (do
       (.open req "GET" (js/encodeURIComponent url) true)
-      (aset req "responseType" "arraybuffer")
-      (aset req "onload" (fn []
-        (.decodeAudioData context (aget req "response") #(go (>! c %1)))
+      (set! (.-responseType req) "arraybuffer")
+      (set! (.-onload req) (fn []
+        (.decodeAudioData context (.-response req) #(go (>! c %1)))
       ))
       (.send req)
     )

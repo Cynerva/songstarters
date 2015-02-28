@@ -7,44 +7,42 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
 
-(defn generate-button [param-state song-state]
-  [:button.btn.btn-primary {
-    :type "button"
-    :on-click #(go (let [song (<! (random-song @param-state))]
-      (reset! song-state song)
-      (play-song song)
-    ))
-  } "Generate"]
+(def song (atom nil))
+(def params (atom {}))
+
+(defn button [text params]
+  [:button.btn.btn-primary (merge {:type "button"} params) text]
 )
 
-(defn song-display [state]
-  (let [song @state]
-    (if-not (nil? song)
-      [:div.well
-        (pr-str song)
-      ]
+(defn generate-button []
+  (let [generating (atom false)] (fn []
+    (if @generating
+      [button "Generating..." {:disabled true}]
+      [button "Generate" {
+        :on-click #(go
+          (reset! generating true)
+          (reset! song (<! (random-song @params)))
+          (play-song @song)
+          (reset! generating false)
+        )
+      }]
     )
-  )
+  ))
 )
 
 (defn slider [min max on-change]
-  (let [state (atom min)]
-    (on-change min)
-    (fn [min max on-change]
-      [:div
-        [:input {:type "range" :min min :max max :value @state
-          :on-change #(let [value (-> % .-target .-value)]
-            (reset! state value)
-            (on-change value)
-          )
-        }]
-      ]
-    )
+  (on-change min)
+  (fn [min max on-change]
+    [:div
+      [:input {:type "range" :min min :max max :default-value min
+        :on-change #(on-change (-> % .-target .-value))
+      }]
+    ]
   )
 )
 
-(defn song-params [params]
-  [:div
+(defn song-controls []
+  [:div.well
     "Duration: " (:duration @params)
     [slider 10 60 #(swap! params assoc :duration %)]
     "Note length: " (:max-note-duration @params)
@@ -52,40 +50,29 @@
       :min-note-duration (Math/pow 2 (dec %))
       :max-note-duration (Math/pow 2 %)
     )]
+    [generate-button]
   ]
 )
 
-(defn song-controls []
-  (let [params (atom {}) song (atom nil)]
-    [:div.row
-      [:div.col-xs-6
-        [:div.well
-          [song-params params]
-          [generate-button params song]
-        ]
-      ]
-      [:div.col-xs-6
-        [song-display song]
-      ]
-    ]
-  )
-)
-
-(defn header []
+(defn song-display []
   [:div.well
-    [:div.row
-      [:div.col-xs-6 [:h1 "Songstarters"]]
-      [:div.col-xs-6 
-        [:a {:href "https://github.com/Cynerva/songstarters"} "github"]
-      ]
-    ]
+    (if (nil? @song)
+      "No song."
+      (pr-str @song)
+    )
   ]
 )
 
 (defn page []
   [:div.container
-    [header]
-    [song-controls]
+    [:div.row
+      [:div.col-xs-6
+        [song-controls]
+      ]
+      [:div.col-xs-6
+        [song-display]
+      ]
+    ]
   ]
 )
 

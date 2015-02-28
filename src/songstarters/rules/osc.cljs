@@ -8,8 +8,8 @@
 
 (defn play-osc [context dest osc-type freq duration when]
   (let [osc (.createOscillator context)]
-    (aset osc "type" osc-type)
-    (aset (.-frequency osc) "value" freq)
+    (set! (.-type osc) osc-type)
+    (set! (-> osc .-frequency .-value) freq)
     (.connect osc dest)
     (.start osc when)
     (.stop osc (+ when duration))
