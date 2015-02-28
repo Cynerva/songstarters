@@ -1,0 +1,109 @@
+/*
+  Externs for Web Audio API. Incomplete.
+*/
+
+var AudioContext
+
+AudioContext.currentTime
+AudioContext.destination
+AudioContext.listener
+AudioContext.sampleRate
+AudioContext.mozAudioChannelType
+
+AudioContext.createBuffer
+AudioContext.createBufferSource
+AudioContext.createMediaElementSource
+AudioContext.createMediaStreamSource
+AudioContext.createMediaStreamDestination
+AudioContext.createScriptProcessor
+AudioContext.createStereoPanner
+AudioContext.createAnalyser
+AudioContext.createBiquadFilter
+AudioContext.createChannelMerger
+AudioContext.createChannelSplitter
+AudioContext.createConvolver
+AudioContext.createDelay
+AudioContext.createDynamicsCompressor
+AudioContext.decodeAudioData
+AudioContext.createGain
+AudioContext.createOscillator
+AudioContext.createPanner
+AudioContext.createPeriodicWave
+AudioContext.createWaveShaper
+AudioContext.createAudioWorker
+
+var AudioNode
+
+AudioNode.context
+AudioNode.numberOfInputs
+AudioNode.numberOfOutputs
+AudioNode.channelCount
+AudioNode.channelCountMode
+AudioNode.channelInterpretation
+
+AudioNode.connect
+AudioNode.disconnect
+
+var AudioParam
+
+AudioParam.value
+AudioParam.defaultValue
+
+AudioParam.setValueAtTime
+AudioParam.linearRampToValueAtTime
+AudioParam.exponentialRampToValueAtTime
+AudioParam.setTargetAtTime
+AudioParam.setValueCurveAtTime
+AudioParam.cancelScheduledValues
+
+var AudioBuffer
+
+AudioBuffer.sampleRate
+AudioBuffer.length
+AudioBuffer.duration
+AudioBuffer.numberOfChannels
+
+AudioBuffer.getChannelData
+AudioBuffer.copyFromChannel
+AudioBuffer.copyToChannel
+
+var AudioBufferSourceNode
+
+AudioBufferSourceNode.buffer
+AudioBufferSourceNode.playbackRate
+AudioBufferSourceNode.loop
+AudioBufferSourceNode.loopStart
+AudioBufferSourceNode.loopEnd
+AudioBufferSourceNode.onended
+
+AudioBufferSourceNode.start
+AudioBufferSourceNode.stop
+
+var ConvolverNode
+
+ConvolverNode.buffer
+ConvolverNode.normalize
+
+var DynamicsCompressorNode
+
+DynamicsCompressorNode.threshold
+DynamicsCompressorNode.knee
+DynamicsCompressorNode.ratio
+DynamicsCompressorNode.reduction
+DynamicsCompressorNode.attack
+DynamicsCompressorNode.release
+
+var GainNode
+
+GainNode.gain
+
+var OscillatorNode
+
+OscillatorNode.frequency
+OscillatorNode.detune
+OscillatorNode.type
+OscillatorNode.onended
+
+OscillatorNode.start
+OscillatorNode.stop
+OscillatorNode.setPeriodicWave

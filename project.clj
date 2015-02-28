@@ -31,6 +31,7 @@
         :compiler {
           :output-to "public/dist/songstarters.js"
           :optimizations :advanced
+          :externs ["conf/webaudio-externs.js"]
         }
       }
     }
