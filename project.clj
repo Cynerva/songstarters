@@ -18,7 +18,7 @@
   ]
   :cljsbuild {
     :builds {
-      :dev {
+      :debug {
         :source-paths ["src"]
         :compiler {
           :output-dir "public/dist/build"
@@ -26,7 +26,7 @@
           :source-map "public/dist/songstarters.js.map"
         }
       }
-      :prod {
+      :release {
         :source-paths ["src"]
         :compiler {
           :output-to "public/dist/songstarters.js"
