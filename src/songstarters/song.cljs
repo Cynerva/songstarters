@@ -49,11 +49,13 @@
   ))
 )
 
+(def default-context (js/AudioContext.))
+
 (defn play-song
   ([song] (play-song song {}))
   ([song params]
     (go (let [
-      context (or (:context params) (js/AudioContext.))
+      context (or (:context params) default-context)
       dest (new-compressor context (.-destination context))
       default-params {
         :context context

@@ -1,8 +1,8 @@
 (ns songstarters.rules.looper
   (:require
-    [cljs.core.async :refer [chan >! <!]]
+    [cljs.core.async :refer [<! timeout]]
   )
-  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]])
 )
 
 (def rule {:looper {
@@ -23,10 +23,12 @@
     (go (let [
       [interval subdivide child-node] (rest node)
       child (<! ((:dispatch params) child-node params))
+      context (:context params)
       player (fn [when]
-        (loop [i subdivide when when]
+        (go-loop [i subdivide when when]
           ; FIXME: should be a (when) call...
           (if (> i 0) (do
+            (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
             (child when)
             (recur (dec i) (+ when interval))
           ))

@@ -1,8 +1,8 @@
 (ns songstarters.rules.splitter
   (:require
-    [cljs.core.async :refer [chan >! <!]]
+    [cljs.core.async :refer [<! timeout]]
   )
-  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]])
 )
 
 (def rule {:splitter {
@@ -37,12 +37,14 @@
           ))
         )
       )
+      context (:context params)
       player (fn [when]
-        (loop [children children when when]
+        (go-loop [children children when when]
           ; FIXME: This should be a (when) call, not (if (do))
           ; Unfortunately, the variable itself is named "when" so we'd have to use
           ; the fully qualified name. Need to rename this param project-wide.
           (if (seq children) (do
+            (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
             ((first children) when)
             (recur (rest children) (+ when interval))
           ))
