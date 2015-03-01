@@ -33,9 +33,8 @@
       buffer (<! (load-buffer context sample-path))
       playback-rate (/ (.-duration buffer) duration)
       player {
-        :play (fn [when]
-          (play-buffer context buffer dests when playback-rate)
-        )
+        :play #(play-buffer context buffer dests % playback-rate)
+        :stop #()
       }
     ] player))
   )

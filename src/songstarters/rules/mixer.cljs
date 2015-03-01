@@ -31,11 +31,8 @@
         )
       )
       player {
-        :play (fn [when]
-          (doseq [child children]
-            ((:play child) when)
-          )
-        )
+        :play #(doseq [child children] ((:play child) %))
+        :stop #(doseq [child children] ((:stop child)))
       }
     ] player))
   )

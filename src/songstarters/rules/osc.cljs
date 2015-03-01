@@ -45,9 +45,8 @@
       freq (note->freq (get node 2))
       duration (get node 3)
       player {
-        :play (fn [when]
-          (play-osc context gain osc-type freq duration when)
-        )
+        :play #(play-osc context gain osc-type freq duration %)
+        :stop #()
       }
     ] player))
   )
