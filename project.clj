@@ -1,4 +1,4 @@
-(defproject songstarters "0.0.0"
+(defproject songstarters "0.0.1"
   :aliases {
     "import" ["run", "-m", "songstarters.import.core"]
   }
