@@ -1,3 +1,5 @@
 target
 .lein-repl-history
 public/dist
+public/samples
+public/sampleList

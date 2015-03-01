@@ -1,4 +1,4 @@
-(ns songstarters.server.import
+(ns songstarters.import.core
   (:require
     [clojure.string :refer [replace-first split join]]
     [clojure.java.io :as io]
@@ -29,7 +29,7 @@
   ])
 )
 
-(defn -main [path]
+(defn import-files [path]
   (let [
     root (io/file path)
     root-path (.getAbsolutePath root)
@@ -38,5 +38,28 @@
       (import-file (.getAbsolutePath file) root-path)
     )
   ])
+)
+
+(defn sample-paths []
+  (let [
+    root (clojure.java.io/file "public/samples")
+    root-path (.getAbsolutePath root)
+    files (filter #(.isFile %1) (file-seq root))
+    file-paths (for [file files] (.getAbsolutePath file))
+    result (for [path file-paths]
+      (subs path (+ (count root-path) 1))
+    )
+  ] result)
+)
+
+(defn update-sample-list []
+  (with-open [w (io/writer "public/sampleList")]
+    (.write w (pr-str (sample-paths)))
+  )
+)
+
+(defn -main [path]
+  (import-files path)
+  (update-sample-list)
   (shutdown-agents)
 )

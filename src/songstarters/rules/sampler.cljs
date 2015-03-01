@@ -29,7 +29,7 @@
       context (:context params)
       dests (:dests params)
       duration (get node 1)
-      sample-path (get node 2)
+      sample-path (str "samples/" (get node 2))
       buffer (<! (load-buffer context sample-path))
       playback-rate (/ (.-duration buffer) duration)
       player (fn [when] (play-buffer context buffer dests when playback-rate))
