@@ -50,31 +50,23 @@
 )
 
 (def default-context (js/AudioContext.))
-(def current-player nil)
 
-(defn stop-player []
-  (when-not (nil? current-player)
-    ((:stop current-player))
-    (set! current-player nil)
-  )
-)
-
-(defn play-song
-  ([song] (play-song song {}))
+(defn song-player
+  ([song] (song-player song {}))
   ([song params]
-    (stop-player)
     (go (let [
       context (or (:context params) default-context)
-      dest (new-compressor context (.-destination context))
+      compressor (new-compressor context (.-destination context))
       default-params {
         :context context
-        :dests [dest]
+        :dests [compressor]
         :dispatch dispatch-player
       }
-      player (<! (dispatch-player song (merge default-params params)))
-    ]
-      (set! current-player player)
-      ((:play player) (.-currentTime context))
-    ))
+      child (<! (dispatch-player song (merge default-params params)))
+      player {
+        :play #((:play child) (.-currentTime context))
+        :stop #(do (.disconnect compressor) ((:stop child)))
+      }
+    ] player))
   )
 )
