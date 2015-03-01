@@ -24,16 +24,18 @@
       [interval subdivide child-node] (rest node)
       child (<! ((:dispatch params) child-node params))
       context (:context params)
-      player (fn [when]
-        (go-loop [i subdivide when when]
-          ; FIXME: should be a (when) call...
-          (if (> i 0) (do
-            (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
-            (child when)
-            (recur (dec i) (+ when interval))
-          ))
+      player {
+        :play (fn [when]
+          (go-loop [i subdivide when when]
+            ; FIXME: should not have to specify clojure.core/when here
+            (clojure.core/when (> i 0)
+              (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
+              ((:play child) when)
+              (recur (dec i) (+ when interval))
+            )
+          )
         )
-      )
+      }
     ] player))
   )
 }})

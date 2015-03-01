@@ -32,7 +32,11 @@
       sample-path (str "samples/" (get node 2))
       buffer (<! (load-buffer context sample-path))
       playback-rate (/ (.-duration buffer) duration)
-      player (fn [when] (play-buffer context buffer dests when playback-rate))
+      player {
+        :play (fn [when]
+          (play-buffer context buffer dests when playback-rate)
+        )
+      }
     ] player))
   )
 }})

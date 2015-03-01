@@ -63,6 +63,6 @@
         :dispatch dispatch-player
       }
       player (<! (dispatch-player song (merge default-params params)))
-    ] (player (.-currentTime context))))
+    ] ((:play player) (.-currentTime context))))
   )
 )

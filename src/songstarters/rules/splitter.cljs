@@ -38,18 +38,18 @@
         )
       )
       context (:context params)
-      player (fn [when]
-        (go-loop [children children when when]
-          ; FIXME: This should be a (when) call, not (if (do))
-          ; Unfortunately, the variable itself is named "when" so we'd have to use
-          ; the fully qualified name. Need to rename this param project-wide.
-          (if (seq children) (do
-            (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
-            ((first children) when)
-            (recur (rest children) (+ when interval))
-          ))
+      player {
+        :play (fn [when]
+          (go-loop [children children when when]
+            ; FIXME: should not have to specify clojure.core/when here
+            (clojure.core/when (seq children)
+              (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
+              ((:play (first children)) when)
+              (recur (rest children) (+ when interval))
+            )
+          )
         )
-      )
+      }
     ] player))
   )
 }})
