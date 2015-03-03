@@ -52,4 +52,18 @@
       }
     ] player))
   )
+  :max-time (fn [node when dispatch]
+    (let [[interval & children] (rest node)]
+      (loop [children children when when result 0]
+        (if (empty? children)
+          result
+          (recur
+            (rest children)
+            (+ when interval)
+            (max result (dispatch (first children) when))
+          )
+        )
+      )
+    )
+  )
 }})

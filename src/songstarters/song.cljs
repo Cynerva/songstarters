@@ -49,6 +49,12 @@
   ))
 )
 
+(defn max-time [song]
+  ((fn dispatch [node when]
+    ((:max-time ((first node) rules)) node when dispatch)
+  ) song 0)
+)
+
 (def default-context (js/AudioContext.))
 
 (defn song-player

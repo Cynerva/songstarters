@@ -61,9 +61,11 @@
   ] buffer)
 )
 
+(def default-duration 1)
+
 (defn create-convolver [context dests color]
   (let [convolver (.createConvolver context)]
-    (set! (.-buffer convolver) (impulse-response context color 1 2))
+    (set! (.-buffer convolver) (impulse-response context color default-duration 2))
     (doseq [dest dests]
       (.connect convolver dest)
     )
@@ -104,5 +106,8 @@
       child-params (assoc params :dests [gain convolver])
       child ((:dispatch params) (get node 3) child-params)
     ] child)
+  )
+  :max-time (fn [node when dispatch]
+    (+ (dispatch (last node) when) default-duration)
   )
 }})

@@ -38,4 +38,7 @@
       }
     ] player))
   )
+  :max-time (fn [node when dispatch]
+    (apply max (for [child (rest node)] (dispatch child when)))
+  )
 }})

@@ -56,4 +56,7 @@
       }
     ] player))
   )
+  :max-time (fn [node when dispatch]
+    (+ when (get node 3))
+  )
 }})

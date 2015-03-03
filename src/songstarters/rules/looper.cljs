@@ -38,4 +38,9 @@
       }
     ] player))
   )
+  :max-time (fn [node when dispatch]
+    (let [[interval subdivide child] (rest node)]
+      (dispatch child (+ when (* interval (dec subdivide))))
+    )
+  )
 }})
