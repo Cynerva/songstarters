@@ -2,7 +2,7 @@
   (:require
     [cljs.core.async :refer [<!]]
     [reagent.core :as reagent :refer [atom]]
-    [songstarters.song :refer [random-song song-player]]
+    [songstarters.song :refer [random-song song-player start-player stop-player]]
     [songstarters.namegen :refer [random-title]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
@@ -24,7 +24,7 @@
       [button "Generate" {
         :on-click #(go
           (reset! generating true)
-          (if-not (nil? @player) ((:stop @player)))
+          (if-not (nil? @player) (stop-player @player))
           (let [
             new-song (<! (random-song @params))
             new-title (<! (random-title))
@@ -33,7 +33,7 @@
             (reset! song-title new-title)
             (reset! player (<! (song-player new-song)))
             (reset! generating false)
-            ((:play @player))
+            (start-player @player)
           )
         )
       }]

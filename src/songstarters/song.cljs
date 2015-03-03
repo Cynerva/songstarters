@@ -64,9 +64,19 @@
       }
       child (<! (dispatch-player song (merge default-params params)))
       player {
-        :play #((:play child) (.-currentTime context))
-        :stop #(do (.disconnect compressor) ((:stop child)))
+        :context context
+        :child child
+        :compressor compressor
       }
     ] player))
   )
+)
+
+(defn start-player [player]
+  ((-> player :child :play) (-> player :context .-currentTime))
+)
+
+(defn stop-player [player]
+  (-> player :compressor .disconnect)
+  ((-> player :child :stop))
 )
