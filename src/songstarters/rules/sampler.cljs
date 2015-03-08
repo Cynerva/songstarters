@@ -1,7 +1,7 @@
 (ns songstarters.rules.sampler
   (:require
     [cljs.reader :refer [read-string]]
-    [cljs.core.async :refer [chan >! <!]]
+    [cljs.core.async :refer [<! timeout]]
     [cljs-http.client :as http]
     [songstarters.audio :refer [load-buffer play-buffer]]
   )
@@ -32,9 +32,15 @@
       sample-path (str "samples/" (get node 2))
       buffer (<! (load-buffer context sample-path))
       playback-rate (/ (.-duration buffer) duration)
+      stopped (atom false)
       player {
-        :play #(play-buffer context buffer dests % playback-rate)
-        :stop #()
+        :play #(go
+          (when-not @stopped
+            (<! (timeout (* (- % (.-currentTime context) 1) 1000)))
+            (play-buffer context buffer dests % playback-rate)
+          )
+        )
+        :stop #(reset! stopped true)
       }
     ] player))
   )

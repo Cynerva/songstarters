@@ -31,7 +31,9 @@
         )
       )
       player {
-        :play #(doseq [child children] ((:play child) %))
+        :play #(let [channels (doseq [child children] ((:play child) %))]
+          (go (doseq [channel channels] (<! channel)))
+        )
         :stop #(doseq [child children] ((:stop child)))
       }
     ] player))

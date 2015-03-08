@@ -1,6 +1,6 @@
 (ns songstarters.rules.osc
   (:require
-    [cljs.core.async :refer [chan >! <!]]
+    [cljs.core.async :refer [<! timeout]]
     [songstarters.rules.scale :refer [note->freq]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
@@ -44,9 +44,15 @@
       osc-type (get node 1)
       freq (note->freq (get node 2))
       duration (get node 3)
+      stopped (atom false)
       player {
-        :play #(play-osc context gain osc-type freq duration %)
-        :stop #()
+        :play #(go
+          (when-not @stopped
+            (<! (timeout (* (- % (.-currentTime context) 1) 1000)))
+            (play-osc context gain osc-type freq duration %)
+          )
+        )
+        :stop #(reset! stopped true)
       }
     ] player))
   )

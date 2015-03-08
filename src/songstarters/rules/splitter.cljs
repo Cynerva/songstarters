@@ -38,21 +38,17 @@
         )
       )
       context (:context params)
-      stopped (atom false)
       player {
         :play (fn [when]
           (go-loop [children children when when]
             ; FIXME: should not have to specify clojure.core/when here
             (clojure.core/when (seq children)
-              (<! (timeout (* (- when (.-currentTime context) 1) 1000)))
-              (when-not @stopped
-                ((:play (first children)) when)
-                (recur (rest children) (+ when interval))
-              )
+              (<! ((:play (first children)) when))
+              (recur (rest children) (+ when interval))
             )
           )
         )
-        :stop #(do (reset! stopped true) (doseq [child children] ((:stop child))))
+        :stop #(doseq [child children] ((:stop child)))
       }
     ] player))
   )
