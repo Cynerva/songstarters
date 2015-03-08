@@ -41,11 +41,11 @@
   ))
 )
 
-(defn slider [min max on-change]
-  (on-change min)
-  (fn [min max on-change]
+(defn slider [min max initial on-change]
+  (on-change initial)
+  (fn [min max initial on-change]
     [:div
-      [:input {:type "range" :min min :max max :default-value min
+      [:input {:type "range" :min min :max max :default-value initial
         :on-change #(on-change (-> % .-target .-value))
       }]
     ]
@@ -55,9 +55,9 @@
 (defn song-controls []
   [:div.well
     "Duration: " (:duration @params)
-    [slider 10 60 #(swap! params assoc :duration %)]
+    [slider 1 120 10 #(swap! params assoc :duration %)]
     "Note length: " (:max-note-duration @params)
-    [slider -2 3 #(swap! params assoc
+    [slider -3 3 -2 #(swap! params assoc
       :min-note-duration (Math/pow 2 (dec %))
       :max-note-duration (Math/pow 2 %)
     )]
