@@ -36,7 +36,9 @@
       player {
         :play #(go
           (when-not @stopped
-            (<! (timeout (* (- % (.-currentTime context) 1) 1000)))
+            (if-not (= (type context) js/OfflineAudioContext)
+              (<! (timeout (* (- % (.-currentTime context) 1) 1000)))
+            )
             (play-buffer context buffer dests % playback-rate)
           )
         )

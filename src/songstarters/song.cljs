@@ -1,6 +1,6 @@
 (ns songstarters.song
   (:require
-    [cljs.core.async :refer [<!]]
+    [cljs.core.async :refer [<! >! chan]]
     [songstarters.audio :refer [new-compressor]]
     [songstarters.rules.sampler :as sampler]
     [songstarters.rules.looper :as looper]
@@ -85,4 +85,20 @@
 (defn stop-player [player]
   (-> player :compressor .disconnect)
   ((-> player :child :stop))
+)
+
+(defn render-song [song]
+  (let [channel (chan)]
+    (go (let [
+      context (js/OfflineAudioContext. 2 (* (max-time song) 44100) 44100)
+      player (<! (song-player song {:context context}))
+    ]
+      (<! (start-player player))
+      (.startRendering context)
+      (set! (.-oncomplete context) #(go
+        (>! channel (.-renderedBuffer %))
+      ))
+    ))
+    channel
+  )
 )

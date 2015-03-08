@@ -1,6 +1,6 @@
 (ns songstarters.rules.mixer
   (:require
-    [cljs.core.async :refer [chan >! <!]]
+    [cljs.core.async :refer [<!]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
 )
@@ -31,7 +31,9 @@
         )
       )
       player {
-        :play #(let [channels (doseq [child children] ((:play child) %))]
+        :play #(let [
+          channels (doall (for [child children] ((:play child) %)))
+        ]
           (go (doseq [channel channels] (<! channel)))
         )
         :stop #(doseq [child children] ((:stop child)))
