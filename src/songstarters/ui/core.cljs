@@ -17,28 +17,36 @@
   [:button.btn.btn-primary (merge {:type "button"} params) text]
 )
 
-(defn generate-button []
-  (let [generating (atom false)] (fn []
-    (if @generating
-      [button "Generating..." {:disabled true}]
-      [button "Generate" {
-        :on-click #(go
-          (reset! generating true)
-          (if-not (nil? @player) (stop-player @player))
-          (let [
-            new-song (<! (random-song @params))
-            new-title (<! (random-title))
-          ]
-            (reset! song new-song)
-            (reset! song-title new-title)
-            (reset! player (<! (song-player new-song)))
-            (start-player @player)
-            (reset! generating false)
-          )
-        )
+(defn slider [min max initial on-change]
+  (on-change initial)
+  (fn [min max initial on-change]
+    [:div
+      [:input {:type "range" :min min :max max :default-value initial
+        :on-change #(on-change (-> % .-target .-value))
       }]
-    )
-  ))
+    ]
+  )
+)
+
+(defn play-button []
+  (if (or (nil? @song) (not (nil? @player)))
+    [button "Play" {:disabled true}]
+    [button "Play" {:on-click #(go
+      (reset! player (<! (song-player @song)))
+      (<! (start-player @player))
+      (reset! player nil)
+    )}]
+  )
+)
+
+(defn stop-button []
+  (if (nil? @player)
+    [button "Stop" {:disabled true}]
+    [button "Stop" {:on-click (fn []
+      (stop-player @player)
+      (reset! player nil)
+    )}]
+  )
 )
 
 (defn download-button []
@@ -55,18 +63,49 @@
   ))
 )
 
-(defn slider [min max initial on-change]
-  (on-change initial)
-  (fn [min max initial on-change]
-    [:div
-      [:input {:type "range" :min min :max max :default-value initial
-        :on-change #(on-change (-> % .-target .-value))
-      }]
+(defn song-player-controls []
+  [:div.well
+    [:div.row
+      [:div.col-xs-12
+        [:p (if (nil? @song-title) "No song." @song-title)]
+      ]
     ]
-  )
+    [:div.row
+      [:div.col-xs-12
+        [play-button]
+        [stop-button]
+        [download-button]
+      ]
+    ]
+  ]
 )
 
-(defn song-controls []
+(defn generate-button []
+  (let [generating (atom false)] (fn []
+    (if @generating
+      [button "Generating..." {:disabled true}]
+      [button "Generate" {
+        :on-click #(go
+          (reset! generating true)
+          (if-not (nil? @player) (stop-player @player))
+          (let [
+            new-song (<! (random-song @params))
+            new-title (<! (random-title))
+          ]
+            (reset! song new-song)
+            (reset! song-title new-title)
+            (reset! player (<! (song-player new-song)))
+            (reset! generating false)
+            (<! (start-player @player))
+            (reset! player nil)
+          )
+        )
+      }]
+    )
+  ))
+)
+
+(defn song-generator-controls []
   [:div.well
     "Duration: " (:duration @params)
     [slider 1 120 10 #(swap! params assoc :duration %)]
@@ -76,27 +115,29 @@
       :max-note-duration (Math/pow 2 %)
     )]
     [generate-button]
-    [download-button]
   ]
 )
 
 (defn song-display []
-  [:div.well
-    [:p @song-title]
-    (if (nil? @song)
-      "No song."
+  (if-not (nil? @song)
+    [:div.well
       (pr-str @song)
-    )
-  ]
+    ]
+  )
 )
 
 (defn page []
   [:div.container
     [:div.row
       [:div.col-xs-6
-        [song-controls]
+        [song-player-controls]
       ]
       [:div.col-xs-6
+        [song-generator-controls]
+      ]
+    ]
+    [:div.row
+      [:div.col-xs-12
         [song-display]
       ]
     ]
