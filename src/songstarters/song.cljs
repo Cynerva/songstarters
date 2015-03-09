@@ -1,7 +1,7 @@
 (ns songstarters.song
   (:require
     [cljs.core.async :refer [<! >! chan]]
-    [songstarters.audio :refer [new-compressor]]
+    [songstarters.audio :refer [new-compressor download-buffer]]
     [songstarters.rules.sampler :as sampler]
     [songstarters.rules.looper :as looper]
     [songstarters.rules.splitter :as splitter]
@@ -101,4 +101,8 @@
     ))
     channel
   )
+)
+
+(defn download-song [song song-title]
+  (go (download-buffer (<! (render-song song)) (str song-title ".wav")))
 )

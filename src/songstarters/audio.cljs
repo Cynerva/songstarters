@@ -40,3 +40,8 @@
     compressor
   )
 )
+
+(defn download-buffer [buffer filename]
+  ; Kinda hacky
+  (js/saveAs (js/Blob. (clj->js [(js/exportWAV buffer)])) filename)
+)

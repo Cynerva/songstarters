@@ -2,7 +2,7 @@
   (:require
     [cljs.core.async :refer [<!]]
     [reagent.core :as reagent :refer [atom]]
-    [songstarters.song :refer [random-song song-player start-player stop-player]]
+    [songstarters.song :refer [random-song song-player start-player stop-player download-song]]
     [songstarters.namegen :refer [random-title]]
   )
   (:require-macros [cljs.core.async.macros :refer [go]])
@@ -32,11 +32,25 @@
             (reset! song new-song)
             (reset! song-title new-title)
             (reset! player (<! (song-player new-song)))
-            (reset! generating false)
             (start-player @player)
+            (reset! generating false)
           )
         )
       }]
+    )
+  ))
+)
+
+(defn download-button []
+  (let [downloading (atom false)] (fn []
+    (cond
+      (nil? @song) [button "Download" {:disabled true}]
+      @downloading [button "Rendering..." {:disabled true}]
+      :else [button "Download" {:on-click #(go
+        (reset! downloading true)
+        (<! (download-song @song @song-title))
+        (reset! downloading false)
+      )}]
     )
   ))
 )
@@ -62,6 +76,7 @@
       :max-note-duration (Math/pow 2 %)
     )]
     [generate-button]
+    [download-button]
   ]
 )
 
