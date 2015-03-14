@@ -12,6 +12,7 @@
 (def song (atom nil))
 (def player (atom nil))
 (def params (atom {}))
+(def generating (atom false))
 
 (defn button [text params]
   [:button.btn.btn-primary (merge {:type "button"} params) text]
@@ -29,10 +30,12 @@
 )
 
 (defn play-button []
-  (if (or (nil? @song) (not (nil? @player)))
+  (if (or @generating (nil? @song) (not (nil? @player)))
     [button "Play" {:disabled true}]
     [button "Play" {:on-click #(go
+      (reset! generating true)
       (reset! player (<! (song-player @song)))
+      (reset! generating false)
       (<! (start-player @player))
       (reset! player nil)
     )}]
@@ -81,28 +84,26 @@
 )
 
 (defn generate-button []
-  (let [generating (atom false)] (fn []
-    (if @generating
-      [button "Generating..." {:disabled true}]
-      [button "Generate" {
-        :on-click #(go
-          (reset! generating true)
-          (if-not (nil? @player) (stop-player @player))
-          (let [
-            new-song (<! (random-song @params))
-            new-title (<! (random-title))
-          ]
-            (reset! song new-song)
-            (reset! song-title new-title)
-            (reset! player (<! (song-player new-song)))
-            (reset! generating false)
-            (<! (start-player @player))
-            (reset! player nil)
-          )
+  (if @generating
+    [button "Generate" {:disabled true}]
+    [button "Generate" {
+      :on-click #(go
+        (reset! generating true)
+        (if-not (nil? @player) (stop-player @player))
+        (let [
+          new-song (<! (random-song @params))
+          new-title (<! (random-title))
+        ]
+          (reset! song new-song)
+          (reset! song-title new-title)
+          (reset! player (<! (song-player new-song)))
+          (reset! generating false)
+          (<! (start-player @player))
+          (reset! player nil)
         )
-      }]
-    )
-  ))
+      )
+    }]
+  )
 )
 
 (defn song-generator-controls []
