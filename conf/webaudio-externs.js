@@ -97,6 +97,42 @@ var GainNode
 
 GainNode.gain
 
+var OfflineAudioCompletionEvent
+
+OfflineAudioCompletionEvent.renderedBuffer
+
+var OfflineAudioContext
+
+OfflineAudioContext.currentTime
+OfflineAudioContext.destination
+OfflineAudioContext.listener
+OfflineAudioContext.sampleRate
+OfflineAudioContext.mozAudioChannelType
+OfflineAudioContext.oncomplete
+
+OfflineAudioContext.createBuffer
+OfflineAudioContext.createBufferSource
+OfflineAudioContext.createMediaElementSource
+OfflineAudioContext.createMediaStreamSource
+OfflineAudioContext.createMediaStreamDestination
+OfflineAudioContext.createScriptProcessor
+OfflineAudioContext.createStereoPanner
+OfflineAudioContext.createAnalyser
+OfflineAudioContext.createBiquadFilter
+OfflineAudioContext.createChannelMerger
+OfflineAudioContext.createChannelSplitter
+OfflineAudioContext.createConvolver
+OfflineAudioContext.createDelay
+OfflineAudioContext.createDynamicsCompressor
+OfflineAudioContext.decodeAudioData
+OfflineAudioContext.createGain
+OfflineAudioContext.createOscillator
+OfflineAudioContext.createPanner
+OfflineAudioContext.createPeriodicWave
+OfflineAudioContext.createWaveShaper
+OfflineAudioContext.createAudioWorker
+OfflineAudioContext.startRendering
+
 var OscillatorNode
 
 OscillatorNode.frequency
