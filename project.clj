@@ -3,15 +3,15 @@
     "import" ["run", "-m", "songstarters.import.core"]
   }
   :dependencies [
-    [org.clojure/clojure "1.6.0"]
-    [org.clojure/clojurescript "0.0-2850"]
-    [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+    [org.clojure/clojure "1.8.0"]
+    [org.clojure/clojurescript "1.9.89"]
+    [org.clojure/core.async "0.2.385"]
     [me.raynes/fs "1.4.6"]
-    [cljs-http "0.1.26"]
-    [reagent "0.5.0-alpha3"]
+    [cljs-http "0.1.41"]
+    [reagent "0.6.0-rc"]
   ]
   :plugins [
-    [lein-cljsbuild "1.0.4"]
+    [lein-cljsbuild "1.1.3"]
   ]
   :cljsbuild {
     :builds {

@@ -21,7 +21,7 @@
       #"\."
     )) "ogg"))
     _ (io/make-parents out)
-    result (sh "ffmpeg" "-i" in "-codec:" "libvorbis" "-qscale:a" "3" out)
+    result (sh "ffmpeg" "-i" in "-codec:" "libvorbis" "-qscale:a" "5" out)
     _ (if (= (:exit result) 0)
       (println "Imported" in)
       (println "Skipping" in)

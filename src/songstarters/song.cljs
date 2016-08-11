@@ -18,9 +18,9 @@
   mixer/rule
   looper/rule
   splitter/rule
-  reverb/rule
-  osc/rule
-  scale/rule
+  ;reverb/rule
+  ;osc/rule
+  ;scale/rule
 ))
 
 (defn dispatch-apply [params]

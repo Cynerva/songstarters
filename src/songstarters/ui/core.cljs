@@ -109,7 +109,7 @@
 (defn song-generator-controls []
   [:div.well
     "Duration: " (:duration @params)
-    [slider 1 120 10 #(swap! params assoc :duration %)]
+    [slider 1 600 10 #(swap! params assoc :duration %)]
     "Note length: " (:max-note-duration @params)
     [slider -3 3 -2 #(swap! params assoc
       :min-note-duration (Math/pow 2 (dec %))
