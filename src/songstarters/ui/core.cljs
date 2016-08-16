@@ -110,10 +110,13 @@
   [:div.well
     "Duration: " (:duration @params)
     [slider 1 600 10 #(swap! params assoc :duration %)]
-    "Note length: " (:max-note-duration @params)
-    [slider -3 3 -2 #(swap! params assoc
-      :min-note-duration (Math/pow 2 (dec %))
+    "Max note length: " (:max-note-duration @params)
+    [slider -3 4 -2 #(swap! params assoc
       :max-note-duration (Math/pow 2 %)
+    )]
+    "Min note length: " (:min-note-duration @params)
+    [slider -4 3 -3 #(swap! params assoc
+      :min-note-duration (Math/pow 2 %)
     )]
     [generate-button]
   ]
