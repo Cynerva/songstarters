@@ -14,8 +14,27 @@ local function addSound(path)
   table.insert(sounds, sound)
 end
 
+local function expandLoops(text)
+  local result = ""
+  for i = 1,#text do
+    c = text:sub(i, i)
+    if c == "!" then
+      local length = 1
+      local index = #result
+      while index % 2 == 0 do
+        length = length * 2
+        index = index / 2
+      end
+      result = result .. result:sub(#result - length + 1, #result)
+    else
+      result = result .. c
+    end
+  end
+  return result
+end
+
 local function renderSongToStream(song, format, stream)
-  local text = song.text
+  local text = expandLoops(song.text)
   local tickDuration = 44100 * 2 * 60 / song.tempo / song.subdivide
   for i = 1,#text do
     local c = text:sub(i, i)
@@ -45,8 +64,8 @@ addSound("kick.flac")
 addSound("hat.flac")
 addSound("snare.flac")
 
-renderSong({
-  text="0101222201012222",
+playSong({
+  text="01!2!!!",
   tempo=120,
-  subdivide=2
+  subdivide=4
 })
