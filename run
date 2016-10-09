@@ -1,0 +1,23 @@
+#!/usr/bin/lua
+
+require("songstarters")
+
+local tempo = 120
+local measures = 32
+local subdivide = 4
+
+local seed = os.time()
+print("Using seed: " .. seed)
+math.randomseed(seed)
+
+addRandomSounds(10)
+
+local song = {
+  text=randomSongText(measures * 4 * subdivide),
+  tempo=tempo,
+  subdivide=subdivide
+}
+
+printSong(song)
+renderSong(song)
+playSong(song)

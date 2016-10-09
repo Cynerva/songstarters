@@ -2,9 +2,10 @@ require("formats")
 
 local sounds = {}
 
-local function addSound(path)
+function addSound(path)
+  print("adding " .. path)
   local format = formats.u32be
-  local rawStream = io.popen("ffmpeg -i " .. path .. " -f " .. format.text .. " -ac 2 -ar 44100 -", "r")
+  local rawStream = io.popen("ffmpeg -i " .. path .. " -f " .. format.text .. " -ac 2 -ar 44100 - 2>/dev/null", "r")
   local sound = {}
   local sample = format.read(rawStream)
   while sample ~= nil do
@@ -14,17 +15,34 @@ local function addSound(path)
   table.insert(sounds, sound)
 end
 
+function addRandomSounds(count)
+  local f = io.popen("ls -1 sounds")
+  local names = {}
+  for line in f:lines() do
+    table.insert(names, line)
+  end
+  for i = 1,count do
+    local name = names[math.random(#names)]
+    local path = "sounds/" .. name
+    addSound(path)
+  end
+end
+
+local function getLoopLength(i)
+  local length = 1
+  while i % 2 == 0 do
+    length = length * 2
+    i = i / 2
+  end
+  return length
+end
+
 local function expandLoops(text)
   local result = ""
   for i = 1,#text do
     c = text:sub(i, i)
     if c == "!" then
-      local length = 1
-      local index = #result
-      while index % 2 == 0 do
-        length = length * 2
-        index = index / 2
-      end
+      local length = getLoopLength(#result)
       result = result .. result:sub(#result - length + 1, #result)
     else
       result = result .. c
@@ -46,26 +64,39 @@ local function renderSongToStream(song, format, stream)
   end
 end
 
-local function playSong(song)
+function playSong(song)
   local format = formats.u32le
-  local stream = io.popen("ffplay -nodisp -f " .. format.text .. " -ac 2 -ar 44100 -i pipe:0", "w")
+  local stream = io.popen("ffplay -nodisp -f " .. format.text .. " -ac 2 -ar 44100 -i pipe:0 2>/dev/null", "w")
   renderSongToStream(song, format, stream)
   stream:close()
 end
 
-local function renderSong(song)
+function renderSong(song)
   local format = formats.u32le
-  local stream = io.popen("ffmpeg -f " .. format.text .. " -ac 2 -ar 44100 -i pipe:0 render.flac", "w")
+  local stream = io.popen("ffmpeg -y -f " .. format.text .. " -ac 2 -ar 44100 -i pipe:0 render.flac 2>/dev/null", "w")
   renderSongToStream(song, format, stream)
   stream:close()
 end
 
-addSound("kick.flac")
-addSound("hat.flac")
-addSound("snare.flac")
+function printSong(song)
+  print("song")
+  print("| tempo " .. song.tempo)
+  print("| subdivide " .. song.subdivide)
+  print("| text " .. song.text)
+end
 
-playSong({
-  text="01!2!!!",
-  tempo=120,
-  subdivide=4
-})
+function randomSongText(maxLength)
+  local length = 0
+  local result = ""
+  while length < maxLength do
+    if math.random() < 0.5 and length > 0 then
+      local loopLength = getLoopLength(length)
+      length = length + loopLength
+      result = result .. "!"
+    else
+      length = length + 1
+      result = result .. math.random(0, #sounds - 1)
+    end
+  end
+  return result
+end
