@@ -3,8 +3,8 @@
 require("songstarters")
 
 local tempo = 120
-local measures = 32
 local subdivide = 4
+local measures = 8
 
 local seed = os.time()
 print("Using seed: " .. seed)
