@@ -2,8 +2,8 @@
 
 A tool for creating randomized, algorithmic percussion tracks.
 
-This was designed for my own personal use, so it's a bit rough around the edges
-- however, if you're feeling adventurous, feel free to have a go at it!
+This was designed for my own personal use, so it's a bit rough around the
+edges. However, if you're feeling adventurous, feel free to have a go at it!
 
 ## Dependencies
 
