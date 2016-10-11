@@ -2,6 +2,12 @@
 
 A tool for creating randomized, algorithmic percussion tracks.
 
+Example output: http://cynerva.github.io/songstarters/example.ogg
+
+The output usually isn't very interesting on its own, but it can sound a lot
+more interesting when you overlay multiple tracks on top of eachother. For now,
+though, that's outside the scope of this project.
+
 This was designed for my own personal use, so it's a bit rough around the
 edges. However, if you're feeling adventurous, feel free to have a go at it!
 
@@ -34,10 +40,6 @@ This will create a `render.flac` file, and then play it to speakers as well.
 
 The `run` script doesn't support any args, so you'll have to edit it to change
 any parameters.
-
-The output usually isn't very interesting on its own, but it can sound a lot
-more interesting when you overlay multiple tracks on top of eachother. For now,
-though, that's outside the scope of this project.
 
 ## License
 
